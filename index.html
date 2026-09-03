@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Dashboard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: #080b12;
+            color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        header {
+            text-align: center;
+            padding: 25px 0 30px;
+        }
+
+        header h1 {
+            font-size: 38px;
+            font-weight: 700;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #8f98a8;
+            font-size: 15px;
+        }
+
+        /* MAIN CARD */
+
+        .weather-card {
+            background: #10151f;
+            border: 1px solid #202938;
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        /* LOCATION */
+
+        .location {
+            text-align: center;
+            padding-bottom: 15px;
+        }
+
+        .location h2 {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .location p {
+            margin-top: 7px;
+            color: #8993a4;
+            font-size: 14px;
+        }
+
+        /* DROPDOWN */
+
+        #locationSelect {
+            margin-top: 18px;
+
+            padding: 11px 18px;
+
+            min-width: 220px;
+
+            background: #151b26;
+
+            color: #f5f7fa;
+
+            border: 1px solid #344155;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            cursor: pointer;
+        }
+
+        #locationSelect:hover {
+            border-color: #5c6b82;
+        }
+
+        #locationSelect:focus {
+            border-color: #7fb7ff;
+        }
+
+        #locationSelect option {
+            background: #151b26;
+            color: #f5f7fa;
+        }
+
+        /* MAIN WEATHER */
+
+        .main-weather {
+            text-align: center;
+            padding: 28px 0 35px;
+        }
+
+        .weather-icon {
+            font-size: 72px;
+            line-height: 1;
+        }
+
+        .temperature {
+            font-size: 72px;
+            font-weight: 700;
+            margin-top: 12px;
+            letter-spacing: -3px;
+        }
+
+        .condition {
+            font-size: 20px;
+            color: #aeb7c6;
+            margin-top: 8px;
+        }
+
+        /* DETAILS */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .box {
+            background: #151b26;
+            border: 1px solid #222c3b;
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .box:hover {
+            background: #19202c;
+            border-color: #344155;
+        }
+
+        .box .icon {
+            font-size: 28px;
+        }
+
+        .box h3 {
+            font-size: 13px;
+            margin-top: 9px;
+            color: #8993a4;
+            font-weight: 500;
+        }
+
+        .box p {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 6px;
+            color: #f5f7fa;
+        }
+
+        /* SECTION */
+
+        .section-title {
+            margin: 38px 0 16px;
+
+            text-align: left;
+
+            font-size: 22px;
+
+            font-weight: 600;
+        }
+
+        /* FORECAST */
+
+        .forecast {
+            display: grid;
+
+            grid-template-columns:
+                repeat(7, 1fr);
+
+            gap: 10px;
+        }
+
+        .day {
+            background: #151b26;
+
+            border: 1px solid #222c3b;
+
+            border-radius: 15px;
+
+            padding: 16px 6px;
+
+            text-align: center;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .day:hover {
+            background: #19202c;
+
+            transform: translateY(-2px);
+        }
+
+        .day-name {
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #d9dee7;
+        }
+
+        .day-icon {
+            font-size: 32px;
+
+            margin: 12px 0;
+        }
+
+        .day-temp {
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #f5f7fa;
+        }
+
+        .day-rain {
+            color: #7fb7ff;
+
+            font-size: 13px;
+
+            margin-top: 8px;
+        }
+
+        /* UPDATE */
+
+        .update {
+            text-align: center;
+
+            margin-top: 28px;
+
+            color: #697486;
+
+            font-size: 13px;
+        }
+
+        /* ERROR */
+
+        .error {
+            text-align: center;
+
+            color: #ff9b9b;
+
+            margin-top: 12px;
+
+            font-size: 14px;
+        }
+
+        /* LOADING */
+
+        .loading {
+            text-align: center;
+
+            font-size: 18px;
+
+            color: #8f98a8;
+
+            padding: 30px;
+        }
+
+        /* SCROLLBAR */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #080b12;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #293344;
+
+            border-radius: 10px;
+        }
+
+        /* TABLET */
+
+        @media (max-width: 750px) {
+
+            body {
+                padding: 12px;
+            }
+
+            header h1 {
+                font-size: 30px;
+            }
+
+            .weather-card {
+                padding: 22px;
+            }
+
+            .temperature {
+                font-size: 58px;
+            }
+
+            .details {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .forecast {
+                grid-template-columns:
+                    repeat(4, 1fr);
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 450px) {
+
+            header {
+                padding: 18px 0 22px;
+            }
+
+            header h1 {
+                font-size: 26px;
+            }
+
+            .weather-card {
+                padding: 18px;
+
+                border-radius: 18px;
+            }
+
+            .location h2 {
+                font-size: 21px;
+            }
+
+            .weather-icon {
+                font-size: 60px;
+            }
+
+            .temperature {
+                font-size: 52px;
+            }
+
+            .condition {
+                font-size: 17px;
+            }
+
+            .details {
+                gap: 10px;
+            }
+
+            .box {
+                padding: 16px 8px;
+            }
+
+            .forecast {
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 10px;
+            }
+
+            .section-title {
+                font-size: 20px;
+
+                margin-top: 30px;
+            }
+
+            #locationSelect {
+                width: 100%;
+            }
+
+        }
+        /* FOOTER */
+
+     .site-footer {
+    text-align: center;
+    margin-top: 25px;
+    padding: 25px 15px;
+    color: #697486;
+    font-size: 13px;
+    border-top: 1px solid #202938;
+     }
+
+     .site-footer p {
+    margin: 5px 0;
+     }
+
+     .site-footer a {
+    color: #7fb7ff;
+    text-decoration: none;
+     }
+
+     .site-footer a:hover {
+    text-decoration: underline;
+     }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>
+            🌦️ Weather Dashboard
+        </h1>
+
+        <p>
+            Live weather information
+        </p>
+
+    </header>
+
+
+    <!-- WEATHER CARD -->
+
+    <div class="weather-card">
+
+
+        <!-- LOCATION -->
+
+        <div class="location">
+
+            <h2 id="locationName">
+                📍 Sial Danga
+            </h2>
+
+            <p id="locationArea">
+                Jagatballavpur, Howrah, West Bengal
+            </p>
+
+
+            <select
+                id="locationSelect"
+                onchange="changeLocation()"
+            >
+
+                <option value="sialdanga">
+                    Sial Danga
+                </option>
+
+                <option value="maju">
+                    Maju
+                </option>
+
+                <option value="jagatballavpur">
+                    Jagatballavpur
+                </option>
+
+                <option value="panchla">
+                    Panchla
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- CURRENT WEATHER -->
+
+        <div class="main-weather">
+
+            <div
+                class="weather-icon"
+                id="weatherIcon"
+            >
+                🌤️
+            </div>
+
+
+            <div
+                class="temperature"
+                id="temperature"
+            >
+                --°C
+            </div>
+
+
+            <div
+                class="condition"
+                id="condition"
+            >
+                Loading weather...
+            </div>
+
+        </div>
+
+
+        <!-- WEATHER DETAILS -->
+
+        <div class="details">
+
+
+            <div class="box">
+
+                <div class="icon">
+                    💧
+                </div>
+
+                <h3>
+                    Humidity
+                </h3>
+
+                <p id="humidity">
+                    --%
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    🌧️
+                </div>
+
+                <h3>
+                    Rain
+                </h3>
+
+                <p id="rain">
+                    -- mm
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    💨
+                </div>
+
+                <h3>
+                    Wind
+                </h3>
+
+                <p id="wind">
+                    -- km/h
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    🌡️
+                </div>
+
+                <h3>
+                    Today's High
+                </h3>
+
+                <p id="maxTemp">
+                    --°C
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    🥶
+                </div>
+
+                <h3>
+                    Today's Low
+                </h3>
+
+                <p id="minTemp">
+                    --°C
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    🌅
+                </div>
+
+                <h3>
+                    Sunrise
+                </h3>
+
+                <p id="sunrise">
+                    --:--
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    🌇
+                </div>
+
+                <h3>
+                    Sunset
+                </h3>
+
+                <p id="sunset">
+                    --:--
+                </p>
+
+            </div>
+
+
+            <div class="box">
+
+                <div class="icon">
+                    ☔
+                </div>
+
+                <h3>
+                    Rain Chance
+                </h3>
+
+                <p id="rainChance">
+                    --%
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- FORECAST -->
+
+        <h2 class="section-title">
+            📅 7-Day Forecast
+        </h2>
+
+
+        <div
+            class="forecast"
+            id="forecast"
+        >
+
+            <div class="loading">
+                Loading forecast...
+            </div>
+
+        </div>
+
+
+        <!-- UPDATE -->
+
+        <div
+            class="update"
+            id="updated"
+        >
+            Updating...
+        </div>
+
+
+        <!-- ERROR -->
+
+        <div
+            class="error"
+            id="error"
+        >
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/*
+==================================================
+WEATHER LOCATIONS
+==================================================
+*/
+
+const locations = {
+
+
+    sialdanga: {
+
+        name: "Sial Danga",
+
+        area:
+            "Jagatballavpur, Howrah, West Bengal",
+
+        latitude: 22.659344,
+
+        longitude: 88.114055
+
+    },
+
+
+    maju: {
+
+        name: "Maju",
+
+        area:
+            "Jagatballavpur, Howrah, West Bengal",
+
+        latitude: 22.61601,
+
+        longitude: 88.07883
+
+    },
+
+
+    jagatballavpur: {
+
+        name: "Jagatballavpur",
+
+        area:
+            "Howrah, West Bengal",
+
+        latitude: 22.6844,
+
+        longitude: 88.1066
+
+    },
+
+
+    panchla: {
+
+        name: "Panchla",
+
+        area:
+            "Howrah, West Bengal",
+
+        latitude: 22.5696,
+
+        longitude: 88.1334
+
+    }
+
+};
+
+
+
+/*
+==================================================
+CURRENT LOCATION
+==================================================
+*/
+
+let selectedLocation =
+    "sialdanga";
+
+
+
+/*
+==================================================
+CREATE API URL
+==================================================
+*/
+
+function getAPIUrl() {
+
+
+    const location =
+        locations[selectedLocation];
+
+
+    return (
+
+        `https://api.open-meteo.com/v1/forecast?` +
+
+        `latitude=${location.latitude}` +
+
+        `&longitude=${location.longitude}` +
+
+        `&current=` +
+
+        `temperature_2m,` +
+
+        `relative_humidity_2m,` +
+
+        `rain,` +
+
+        `weather_code,` +
+
+        `wind_speed_10m` +
+
+        `&daily=` +
+
+        `temperature_2m_max,` +
+
+        `temperature_2m_min,` +
+
+        `sunrise,` +
+
+        `sunset,` +
+
+        `precipitation_probability_max,` +
+
+        `weather_code` +
+
+        `&timezone=auto`
+
+    );
+
+}
+
+
+
+/*
+==================================================
+CHANGE LOCATION
+==================================================
+*/
+
+function changeLocation() {
+
+
+    selectedLocation =
+
+        document.getElementById(
+            "locationSelect"
+        ).value;
+
+
+    const location =
+        locations[selectedLocation];
+
+
+    document.getElementById(
+        "locationName"
+    ).textContent =
+        "📍 " + location.name;
+
+
+    document.getElementById(
+        "locationArea"
+    ).textContent =
+        location.area;
+
+
+    getWeather();
+
+}
+
+
+
+/*
+==================================================
+GET WEATHER
+==================================================
+*/
+
+async function getWeather() {
+
+
+    try {
+
+
+        const response =
+            await fetch(getAPIUrl());
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Weather API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(data);
+
+
+
+        /*
+        CURRENT TEMPERATURE
+        */
+
+        document.getElementById(
+            "temperature"
+        ).textContent =
+
+            Math.round(
+                data.current.temperature_2m
+            ) + "°C";
+
+
+
+        /*
+        HUMIDITY
+        */
+
+        document.getElementById(
+            "humidity"
+        ).textContent =
+
+            data.current
+                .relative_humidity_2m
+            + "%";
+
+
+
+        /*
+        RAIN
+        */
+
+        document.getElementById(
+            "rain"
+        ).textContent =
+
+            data.current.rain
+            + " mm";
+
+
+
+        /*
+        WIND
+        */
+
+        document.getElementById(
+            "wind"
+        ).textContent =
+
+            Math.round(
+                data.current.wind_speed_10m
+            )
+            + " km/h";
+
+
+
+        /*
+        WEATHER CONDITION
+        */
+
+        const currentCode =
+            data.current.weather_code;
+
+
+        document.getElementById(
+            "condition"
+        ).textContent =
+
+            getWeatherDescription(
+                currentCode
+            );
+
+
+        document.getElementById(
+            "weatherIcon"
+        ).textContent =
+
+            getWeatherIcon(
+                currentCode
+            );
+
+
+
+        /*
+        TODAY'S HIGH
+        */
+
+        document.getElementById(
+            "maxTemp"
+        ).textContent =
+
+            Math.round(
+                data.daily
+                    .temperature_2m_max[0]
+            )
+            + "°C";
+
+
+
+        /*
+        TODAY'S LOW
+        */
+
+        document.getElementById(
+            "minTemp"
+        ).textContent =
+
+            Math.round(
+                data.daily
+                    .temperature_2m_min[0]
+            )
+            + "°C";
+
+
+
+        /*
+        RAIN CHANCE
+        */
+
+        document.getElementById(
+            "rainChance"
+        ).textContent =
+
+            data.daily
+                .precipitation_probability_max[0]
+            + "%";
+
+
+
+        /*
+        SUNRISE
+        */
+
+        document.getElementById(
+            "sunrise"
+        ).textContent =
+
+            formatTime(
+                data.daily.sunrise[0]
+            );
+
+
+
+        /*
+        SUNSET
+        */
+
+        document.getElementById(
+            "sunset"
+        ).textContent =
+
+            formatTime(
+                data.daily.sunset[0]
+            );
+
+
+
+        /*
+        7 DAY FORECAST
+        */
+
+        createForecast(data);
+
+
+
+        /*
+        LAST UPDATED
+        */
+
+        document.getElementById(
+            "updated"
+        ).textContent =
+
+            "Last updated: " +
+
+            new Date()
+                .toLocaleTimeString(
+                    "en-IN"
+                );
+
+
+        document.getElementById(
+            "error"
+        ).textContent = "";
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        document.getElementById(
+            "error"
+        ).textContent =
+
+            "⚠️ Unable to load weather data.";
+
+    }
+
+}
+
+
+
+/*
+==================================================
+WEATHER DESCRIPTION
+==================================================
+*/
+
+function getWeatherDescription(code) {
+
+
+    if (code === 0)
+        return "Clear Sky";
+
+
+    if (code === 1)
+        return "Mainly Clear";
+
+
+    if (code === 2)
+        return "Partly Cloudy";
+
+
+    if (code === 3)
+        return "Cloudy";
+
+
+    if (code >= 45 && code <= 48)
+        return "Foggy";
+
+
+    if (code >= 51 && code <= 57)
+        return "Drizzle";
+
+
+    if (code >= 61 && code <= 67)
+        return "Rain";
+
+
+    if (code >= 71 && code <= 77)
+        return "Snow";
+
+
+    if (code >= 80 && code <= 82)
+        return "Rain Showers";
+
+
+    if (code >= 95 && code <= 99)
+        return "Thunderstorm";
+
+
+    return "Unknown Weather";
+
+}
+
+
+
+/*
+==================================================
+WEATHER ICON
+==================================================
+*/
+
+function getWeatherIcon(code) {
+
+
+    if (code === 0)
+        return "☀️";
+
+
+    if (code === 1 || code === 2)
+        return "🌤️";
+
+
+    if (code === 3)
+        return "☁️";
+
+
+    if (code >= 45 && code <= 48)
+        return "🌫️";
+
+
+    if (code >= 51 && code <= 67)
+        return "🌧️";
+
+
+    if (code >= 71 && code <= 77)
+        return "❄️";
+
+
+    if (code >= 80 && code <= 82)
+        return "🌦️";
+
+
+    if (code >= 95)
+        return "⛈️";
+
+
+    return "🌤️";
+
+}
+
+
+
+/*
+==================================================
+FORMAT TIME
+==================================================
+*/
+
+function formatTime(time) {
+
+
+    const date =
+        new Date(time);
+
+
+    return date.toLocaleTimeString(
+        "en-IN",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+
+/*
+==================================================
+CREATE 7 DAY FORECAST
+==================================================
+*/
+
+function createForecast(data) {
+
+
+    const forecast =
+        document.getElementById(
+            "forecast"
+        );
+
+
+    forecast.innerHTML = "";
+
+
+
+    for (
+        let i = 0;
+        i < 7;
+        i++
+    ) {
+
+
+        const date =
+            new Date(
+                data.daily.time[i]
+            );
+
+
+        const dayName =
+            date.toLocaleDateString(
+                "en-IN",
+                {
+                    weekday: "short"
+                }
+            );
+
+
+        const icon =
+            getWeatherIcon(
+                data.daily
+                    .weather_code[i]
+            );
+
+
+        const max =
+            Math.round(
+                data.daily
+                    .temperature_2m_max[i]
+            );
+
+
+        const min =
+            Math.round(
+                data.daily
+                    .temperature_2m_min[i]
+            );
+
+
+        const rain =
+            data.daily
+                .precipitation_probability_max[i];
+
+
+        const day =
+            document.createElement(
+                "div"
+            );
+
+
+        day.className = "day";
+
+
+        day.innerHTML = `
+
+            <div class="day-name">
+                ${dayName}
+            </div>
+
+            <div class="day-icon">
+                ${icon}
+            </div>
+
+            <div class="day-temp">
+                ${max}° / ${min}°
+            </div>
+
+            <div class="day-rain">
+                🌧️ ${rain}%
+            </div>
+
+        `;
+
+
+        forecast.appendChild(day);
+
+    }
+
+}
+
+
+
+/*
+==================================================
+INITIAL LOAD
+==================================================
+*/
+
+getWeather();
+
+
+
+/*
+==================================================
+AUTO UPDATE
+EVERY 5 MINUTES
+==================================================
+*/
+
+setInterval(
+    getWeather,
+    5 * 60 * 1000
+);
+
+
+</script>
+
+<footer class="site-footer">
+    <p>© 2026 Pantihal Weather</p>
+
+    <p>
+        Weather data by
+        <a href="https://open-meteo.com/" target="_blank">
+            Open-Meteo
+        </a>
+    </p>
+
+    <p>
+        Made with ❤️ for Howrah, West Bengal <br>
+        Made by : Arka 
+    </p>
+</footer>
+</body>
+
+</html>
