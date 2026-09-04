@@ -1502,7 +1502,12 @@ async function loadWeather() {
       formatTime(
         daily.sunset[0]
       );
+    
+  document.getElementById("todayHot").textContent =
+    Math.round(daily.temperature_2m_max[0]);
 
+  document.getElementById("todayCold").textContent =
+    Math.round(daily.temperature_2m_min[0]);
 
     /*
     ==============================================
