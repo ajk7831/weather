@@ -1,1142 +1,1083 @@
- 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AK Weather</title>
+  <title>আমার আবহাওয়া</title>
 
-<style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    body {
+      background:
+        radial-gradient(circle at top left, #16213e, transparent 40%),
+        radial-gradient(circle at bottom right, #24104f, transparent 40%),
+        #050816;
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #dff3ff, #f7fbff);
-    color: #222;
-    min-height: 100vh;
-    padding: 20px;
-}
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
 
-/* HEADER */
+    header {
+      text-align: center;
+      padding: 20px 0 30px;
+    }
 
-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
+    header h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #00eaff, #8b5cf6, #ff4ecd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-header h1 {
-    font-size: 34px;
-}
+    header p {
+      color: #aab3cf;
+      margin-top: 8px;
+      font-size: 16px;
+    }
 
-header p {
-    color: #666;
-    margin-top: 5px;
-}
+    .date {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
+    .date h2 {
+      font-size: 28px;
+    }
 
-/* MAIN */
+    .date p {
+      color: #aab3cf;
+      margin-top: 5px;
+    }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-}
+    .glass {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 24px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
 
+    /* Current Weather */
 
-/* TODAY */
+    .current {
+      padding: 30px;
+      margin-bottom: 25px;
+    }
 
-.today {
-    background: rgba(255,255,255,0.9);
-    border-radius: 25px;
-    padding: 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
-}
+    .location {
+      text-align: center;
+      color: #b7c0dc;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
 
-.today-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
+    .main-weather {
+      text-align: center;
+    }
 
-.location {
-    font-size: 24px;
-    font-weight: bold;
-}
+    .weather-icon {
+      font-size: 85px;
+      margin: 10px 0;
+    }
 
-.today-date {
-    color: #777;
-    margin-top: 5px;
-}
+    .temperature {
+      font-size: 70px;
+      font-weight: bold;
+    }
 
-.main-weather {
-    text-align: center;
-}
+    .condition {
+      font-size: 25px;
+      margin-top: 5px;
+      color: #dce4ff;
+    }
 
-.main-icon {
-    font-size: 80px;
-}
+    .feels {
+      color: #9ea8c6;
+      margin-top: 8px;
+    }
 
-.main-temp {
-    font-size: 50px;
-    font-weight: bold;
-}
+    /* Details */
 
-.condition {
-    font-size: 20px;
-    color: #555;
-}
-
-
-/* DETAILS */
-
-.details {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 25px;
-}
-
-.detail {
-    background: #f5f9fc;
-    border-radius: 15px;
-    padding: 15px;
-    text-align: center;
-}
-
-.detail-icon {
-    font-size: 25px;
-}
-
-.detail-title {
-    color: #777;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-.detail-value {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-
-/* AIR QUALITY */
-
-.aqi {
-    margin-top: 15px;
-    background: #f5f9fc;
-    border-radius: 15px;
-    padding: 18px;
-    text-align: center;
-}
-
-.aqi-value {
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.aqi-status {
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-
-/* FORECAST */
-
-.forecast-title {
-    font-size: 25px;
-    margin-bottom: 15px;
-}
-
-.forecast {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 12px;
-}
-
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 18px 10px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.card-day {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.card-date {
-    color: #777;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.card-icon {
-    font-size: 45px;
-    margin: 15px 0;
-}
-
-.card-condition {
-    font-size: 13px;
-    min-height: 32px;
-}
-
-.card-temp {
-    font-size: 17px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.card-rain {
-    font-size: 12px;
-    color: #2674c5;
-    margin-top: 7px;
-}
-
-
-/* BUTTON */
-
-.refresh {
-    display: block;
-    margin: 25px auto;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 25px;
-    background: #1677ff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.refresh:hover {
-    opacity: 0.85;
-}
-
-
-/* LOADING */
-
-.loading {
-    text-align: center;
-    font-size: 18px;
-    padding: 30px;
-}
-
-
-/* ERROR */
-
-.error {
-    text-align: center;
-    color: red;
-    padding: 20px;
-}
-
-
-/* FOOTER */
-
-footer {
-    text-align: center;
-    margin-top: 35px;
-    color: #777;
-    font-size: 13px;
-}
-
-
-/* MOBILE */
-
-@media (max-width: 800px) {
-
-    .forecast {
-        grid-template-columns: repeat(2, 1fr);
+    .section-title {
+      font-size: 25px;
+      margin: 25px 0 15px;
     }
 
     .details {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .detail {
+      padding: 20px;
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .detail .emoji {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .detail .label {
+      color: #9ea8c6;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .detail .value {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* AQI */
+
+    .aqi-box {
+      padding: 25px;
+      margin-top: 25px;
+    }
+
+    .aqi-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .aqi-number {
+      font-size: 50px;
+      font-weight: bold;
+    }
+
+    .aqi-status {
+      font-size: 20px;
+      margin-top: 5px;
+    }
+
+    .pollution {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .pollution-item {
+      padding: 18px;
+      text-align: center;
+    }
+
+    /* Forecast */
+
+    .forecast-section {
+      margin-top: 30px;
+    }
+
+    .forecast {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+
+    .forecast-card {
+      padding: 20px 10px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .forecast-card:hover {
+      transform: translateY(-7px);
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .forecast-day {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .forecast-date {
+      color: #8f99b8;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .forecast-icon {
+      font-size: 42px;
+      margin: 15px 0;
+    }
+
+    .forecast-condition {
+      font-size: 13px;
+      color: #b7c0dc;
+      min-height: 32px;
+    }
+
+    .max-temp {
+      font-size: 21px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .min-temp {
+      color: #8f99b8;
+      margin-top: 3px;
+    }
+
+    .rain-chance {
+      margin-top: 10px;
+      color: #54d9ff;
+      font-size: 13px;
+    }
+
+    .rain-amount {
+      margin-top: 5px;
+      color: #aab3cf;
+      font-size: 12px;
+    }
+
+    /* Loading */
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #aab3cf;
+      font-size: 18px;
+    }
+
+    .error {
+      text-align: center;
+      background: rgba(255, 60, 80, 0.12);
+      border: 1px solid rgba(255, 60, 80, 0.3);
+      padding: 20px;
+      border-radius: 15px;
+      color: #ff8f9c;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+
+    footer {
+      text-align: center;
+      padding: 35px 0 15px;
+      color: #727b98;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 900px) {
+      .details {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .forecast {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
-    .today-top {
-        flex-direction: column;
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      header h1 {
+        font-size: 34px;
+      }
+
+      .temperature {
+        font-size: 58px;
+      }
+
+      .details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .forecast {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .pollution {
+        grid-template-columns: 1fr;
+      }
+
+      .current {
+        padding: 20px;
+      }
     }
-
-}
-
-</style>
+  </style>
 </head>
-
 
 <body>
 
-<header>
-
-    <h1>🌦️ AK Weather</h1>
-
-    <p>Live weather & 7-day forecast</p>
-
-</header>
-
-
 <div class="container">
 
+  <!-- HEADER -->
 
-    <!-- LOADING -->
+  <header>
+    <h1>আমার আবহাওয়া</h1>
+    <p>Live Weather & Air Quality</p>
+  </header>
 
-    <div id="loading" class="loading">
-        Loading weather...
+  <!-- DATE -->
+
+  <div class="date">
+    <h2 id="todayDay">Loading...</h2>
+    <p id="todayDate">Loading date...</p>
+  </div>
+
+  <!-- CURRENT WEATHER -->
+
+  <section class="glass current">
+
+    <div class="location">
+      📍 Saildanga
     </div>
 
+    <div class="main-weather">
 
-    <!-- ERROR -->
+      <div class="weather-icon" id="currentIcon">
+        🌤️
+      </div>
 
-    <div id="error" class="error"></div>
+      <div class="temperature">
+        <span id="currentTemp">--</span>°C
+      </div>
 
+      <div class="condition" id="currentCondition">
+        Loading...
+      </div>
 
-    <!-- TODAY -->
+      <div class="feels">
+        Feels like <span id="feelsLike">--</span>°C
+      </div>
 
-    <section class="today" id="today" style="display:none;">
+    </div>
 
-        <div class="today-top">
+  </section>
 
-            <div>
+  <!-- WEATHER DETAILS -->
 
-                <div class="location" id="location">
-                    Your Location
-                </div>
+  <h2 class="section-title">Today's Weather</h2>
 
-                <div class="today-date" id="todayDate">
-                </div>
+  <section class="details">
 
-            </div>
+    <div class="glass detail">
+      <div class="emoji">💧</div>
+      <div class="label">Humidity</div>
+      <div class="value">
+        <span id="humidity">--</span>%
+      </div>
+    </div>
 
+    <div class="glass detail">
+      <div class="emoji">💨</div>
+      <div class="label">Wind Speed</div>
+      <div class="value">
+        <span id="windSpeed">--</span> km/h
+      </div>
+    </div>
 
-            <div class="main-weather">
+    <div class="glass detail">
+      <div class="emoji">🧭</div>
+      <div class="label">Wind Direction</div>
+      <div class="value" id="windDirection">
+        --
+      </div>
+    </div>
 
-                <div class="main-icon" id="mainIcon">
-                    🌤️
-                </div>
+    <div class="glass detail">
+      <div class="emoji">☁️</div>
+      <div class="label">Cloud Cover</div>
+      <div class="value">
+        <span id="cloudCover">--</span>%
+      </div>
+    </div>
 
-                <div class="main-temp" id="mainTemp">
-                    --°C
-                </div>
+    <div class="glass detail">
+      <div class="emoji">🌧️</div>
+      <div class="label">Precipitation</div>
+      <div class="value">
+        <span id="precipitation">--</span> mm
+      </div>
+    </div>
 
-                <div class="condition" id="mainCondition">
-                    Loading...
-                </div>
+    <div class="glass detail">
+      <div class="emoji">☔</div>
+      <div class="label">Rain Probability</div>
+      <div class="value">
+        <span id="rainProbability">--</span>%
+      </div>
+    </div>
 
-            </div>
+    <div class="glass detail">
+      <div class="emoji">🌅</div>
+      <div class="label">Sunrise</div>
+      <div class="value" id="sunrise">
+        --
+      </div>
+    </div>
 
+    <div class="glass detail">
+      <div class="emoji">🌇</div>
+      <div class="label">Sunset</div>
+      <div class="value" id="sunset">
+        --
+      </div>
+    </div>
+
+  </section>
+
+  <!-- AIR QUALITY -->
+
+  <section class="glass aqi-box">
+
+    <h2 class="section-title">
+      🌍 Air Quality
+    </h2>
+
+    <div class="aqi-main">
+
+      <div>
+        <div class="label">
+          European AQI
         </div>
 
-
-        <!-- WEATHER DETAILS -->
-
-        <div class="details">
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    💧
-                </div>
-
-                <div class="detail-title">
-                    Humidity
-                </div>
-
-                <div class="detail-value" id="humidity">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    💨
-                </div>
-
-                <div class="detail-title">
-                    Wind
-                </div>
-
-                <div class="detail-value" id="wind">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    🧭
-                </div>
-
-                <div class="detail-title">
-                    Wind Direction
-                </div>
-
-                <div class="detail-value" id="windDirection">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    ☁️
-                </div>
-
-                <div class="detail-title">
-                    Cloud Cover
-                </div>
-
-                <div class="detail-value" id="cloud">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    🌧️
-                </div>
-
-                <div class="detail-title">
-                    Rain Probability
-                </div>
-
-                <div class="detail-value" id="rainProbability">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    🌅
-                </div>
-
-                <div class="detail-title">
-                    Sunrise
-                </div>
-
-                <div class="detail-value" id="sunrise">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    🌇
-                </div>
-
-                <div class="detail-title">
-                    Sunset
-                </div>
-
-                <div class="detail-value" id="sunset">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="detail">
-
-                <div class="detail-icon">
-                    🌡️
-                </div>
-
-                <div class="detail-title">
-                    Feels Like
-                </div>
-
-                <div class="detail-value" id="feelsLike">
-                    --
-                </div>
-
-            </div>
-
+        <div class="aqi-number" id="aqi">
+          --
         </div>
 
+        <div class="aqi-status" id="aqiStatus">
+          Loading...
+        </div>
+      </div>
 
-        <!-- AQI -->
+      <div class="pollution">
 
-        <div class="aqi">
+        <div class="glass pollution-item">
+          <div class="label">
+            PM2.5
+          </div>
 
-            <div>
-                🌫️ Air Quality
-            </div>
-
-            <div class="aqi-value" id="aqi">
-                --
-            </div>
-
-            <div class="aqi-status" id="aqiStatus">
-                Loading...
-            </div>
-
-            <div style="margin-top:8px;">
-                PM2.5:
-                <strong id="pm25">--</strong>
-                μg/m³
-            </div>
-
+          <div class="value">
+            <span id="pm25">--</span> µg/m³
+          </div>
         </div>
 
-    </section>
+        <div class="glass pollution-item">
+          <div class="label">
+            PM10
+          </div>
 
-
-
-    <!-- FORECAST -->
-
-    <section id="forecastSection" style="display:none;">
-
-        <div class="forecast-title">
-            📅 7-Day Forecast
+          <div class="value">
+            <span id="pm10">--</span> µg/m³
+          </div>
         </div>
 
-        <div id="forecast" class="forecast">
-        </div>
+      </div>
 
-    </section>
+    </div>
 
+  </section>
 
-    <!-- REFRESH -->
+  <!-- NEXT 7 DAYS -->
 
-    <button class="refresh" onclick="loadWeather()">
-        🔄 Refresh Weather
-    </button>
+  <section class="forecast-section">
 
+    <h2 class="section-title">
+      📅 Next 7 Days
+    </h2>
+
+    <div id="forecast" class="forecast">
+
+      <div class="loading">
+        Loading forecast...
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ERROR -->
+
+  <div id="error"></div>
+
+  <!-- FOOTER -->
+
+  <footer>
+    © 2026 আমার আবহাওয়া · Powered by Open-Meteo
+  </footer>
 
 </div>
 
 
-<footer>
-
-    Weather data provided by Open-Meteo
-
-</footer>
-
-
-
 <script>
 
+  /*
+   * =========================================
+   * LOCATION
+   * =========================================
+   *
+   * Replace these coordinates with the exact
+   * coordinates of your Saildanga location.
+   */
 
-/* =====================================================
-   LOCATION
-   ===================================================== */
-
-/*
-   CHANGE THESE COORDINATES
-   TO YOUR LOCATION.
-
-   Example:
-   Latitude  = 22.5958
-   Longitude = 88.2636
-*/
-
-const latitude = 22.5958;
-const longitude = 88.2636;
+  const latitude = 22.5958;
+  const longitude = 88.2636;
 
 
-/* =====================================================
-   WEATHER EMOJI
-   ===================================================== */
+  /*
+   * =========================================
+   * WEATHER DESCRIPTION
+   * =========================================
+   */
 
-function getWeatherEmoji(code) {
+  function getWeatherDescription(code) {
 
     if (code === 0)
-        return "☀️";
+      return "Clear Sky";
 
     if (code === 1)
-        return "🌤️";
+      return "Mainly Clear";
 
     if (code === 2)
-        return "⛅";
+      return "Partly Cloudy";
 
     if (code === 3)
-        return "☁️";
+      return "Cloudy";
 
     if (code === 45 || code === 48)
-        return "🌫️";
+      return "Foggy";
 
     if (code >= 51 && code <= 55)
-        return "🌦️";
+      return "Drizzle";
 
     if (code >= 56 && code <= 57)
-        return "🌧️";
+      return "Freezing Drizzle";
 
     if (code >= 61 && code <= 65)
-        return "🌧️";
+      return "Rainy";
 
     if (code >= 66 && code <= 67)
-        return "🌧️";
+      return "Freezing Rain";
 
     if (code >= 71 && code <= 77)
-        return "❄️";
+      return "Snowy";
 
     if (code >= 80 && code <= 82)
-        return "🌦️";
+      return "Rain Showers";
 
     if (code >= 85 && code <= 86)
-        return "🌨️";
+      return "Snow Showers";
 
-    if (code >= 95)
-        return "⛈️";
-
-    return "🌤️";
-}
-
-
-/* =====================================================
-   WEATHER DESCRIPTION
-   ===================================================== */
-
-function getWeatherDescription(code) {
-
-    if (code === 0)
-        return "Clear sky";
-
-    if (code === 1)
-        return "Mainly clear";
-
-    if (code === 2)
-        return "Partly cloudy";
-
-    if (code === 3)
-        return "Overcast";
-
-    if (code === 45 || code === 48)
-        return "Fog";
-
-    if (code >= 51 && code <= 55)
-        return "Drizzle";
-
-    if (code >= 56 && code <= 57)
-        return "Freezing drizzle";
-
-    if (code >= 61 && code <= 65)
-        return "Rain";
-
-    if (code >= 66 && code <= 67)
-        return "Freezing rain";
-
-    if (code >= 71 && code <= 77)
-        return "Snow";
-
-    if (code >= 80 && code <= 82)
-        return "Rain showers";
-
-    if (code >= 85 && code <= 86)
-        return "Snow showers";
-
-    if (code >= 95)
-        return "Thunderstorm";
+    if (code >= 95 && code <= 99)
+      return "Thunderstorm";
 
     return "Unknown";
-}
+  }
 
 
-/* =====================================================
-   WIND DIRECTION
-   ===================================================== */
+  /*
+   * =========================================
+   * WEATHER ICON
+   * =========================================
+   */
 
-function getWindDirection(degrees) {
+  function getWeatherIcon(code) {
+
+    if (code === 0)
+      return "☀️";
+
+    if (code === 1)
+      return "🌤️";
+
+    if (code === 2)
+      return "⛅";
+
+    if (code === 3)
+      return "☁️";
+
+    if (code === 45 || code === 48)
+      return "🌫️";
+
+    if (code >= 51 && code <= 57)
+      return "🌦️";
+
+    if (code >= 61 && code <= 67)
+      return "🌧️";
+
+    if (code >= 71 && code <= 77)
+      return "❄️";
+
+    if (code >= 80 && code <= 82)
+      return "🌦️";
+
+    if (code >= 85 && code <= 86)
+      return "🌨️";
+
+    if (code >= 95 && code <= 99)
+      return "⛈️";
+
+    return "🌤️";
+  }
+
+
+  /*
+   * =========================================
+   * WIND DIRECTION
+   * =========================================
+   */
+
+  function getWindDirection(degrees) {
 
     const directions = [
-        "N",
-        "NE",
-        "E",
-        "SE",
-        "S",
-        "SW",
-        "W",
-        "NW"
+      "N",
+      "NE",
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW"
     ];
 
     const index =
-        Math.round(degrees / 45) % 8;
+      Math.round(degrees / 45) % 8;
 
-    return directions[index];
-}
-
-
-/* =====================================================
-   AQI STATUS
-   ===================================================== */
-
-function getAQIStatus(aqi) {
-
-    if (aqi <= 50)
-        return "Good 🟢";
-
-    if (aqi <= 100)
-        return "Moderate 🟡";
-
-    if (aqi <= 150)
-        return "Unhealthy for sensitive groups 🟠";
-
-    if (aqi <= 200)
-        return "Unhealthy 🔴";
-
-    if (aqi <= 300)
-        return "Very unhealthy 🟣";
-
-    return "Hazardous ⚫";
-}
+    return directions[index] + " (" + Math.round(degrees) + "°)";
+  }
 
 
-/* =====================================================
-   FORMAT TIME
-   ===================================================== */
+  /*
+   * =========================================
+   * DATE FUNCTIONS
+   * =========================================
+   */
 
-function formatTime(time) {
+  function getDayName(dateString) {
 
-    const date = new Date(time);
+    const date =
+      new Date(dateString + "T12:00:00");
+
+    return date.toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long"
+      }
+    );
+  }
+
+
+  function getShortDate(dateString) {
+
+    const date =
+      new Date(dateString + "T12:00:00");
+
+    return date.toLocaleDateString(
+      "en-US",
+      {
+        day: "numeric",
+        month: "short"
+      }
+    );
+  }
+
+
+  function formatTime(timeString) {
+
+    if (!timeString)
+      return "--";
+
+    const date =
+      new Date(timeString);
 
     return date.toLocaleTimeString(
-        "en-US",
-        {
-            hour: "2-digit",
-            minute: "2-digit"
-        }
+      "en-US",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
     );
-}
+  }
 
 
-/* =====================================================
-   DAY NAME
-   ===================================================== */
+  /*
+   * =========================================
+   * AQI STATUS
+   * =========================================
+   */
 
-function getDayName(dateString) {
+  function getAQIStatus(aqi) {
 
-    const date =
-        new Date(dateString + "T12:00:00");
+    if (aqi <= 20)
+      return "Good";
 
-    return date.toLocaleDateString(
-        "en-US",
-        {
-            weekday: "long"
-        }
-    );
-}
+    if (aqi <= 40)
+      return "Fair";
 
+    if (aqi <= 60)
+      return "Moderate";
 
-/* =====================================================
-   DATE FORMAT
-   ===================================================== */
+    if (aqi <= 80)
+      return "Poor";
 
-function formatDate(dateString) {
+    if (aqi <= 100)
+      return "Very Poor";
 
-    const date =
-        new Date(dateString + "T12:00:00");
-
-    return date.toLocaleDateString(
-        "en-US",
-        {
-            day: "numeric",
-            month: "short"
-        }
-    );
-}
+    return "Extremely Poor";
+  }
 
 
-/* =====================================================
-   LOAD WEATHER
-   ===================================================== */
+  /*
+   * =========================================
+   * WEATHER API
+   * =========================================
+   */
 
-async function loadWeather() {
-
-    const loading =
-        document.getElementById("loading");
-
-    const error =
-        document.getElementById("error");
-
-    const today =
-        document.getElementById("today");
-
-    const forecastSection =
-        document.getElementById("forecastSection");
-
-    loading.style.display = "block";
-
-    error.innerHTML = "";
-
-    today.style.display = "none";
-
-    forecastSection.style.display = "none";
-
+  async function loadWeather() {
 
     try {
 
+      const weatherURL =
+        `https://api.open-meteo.com/v1/forecast` +
+        `?latitude=${latitude}` +
+        `&longitude=${longitude}` +
+        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m` +
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset` +
+        `&forecast_days=8` +
+        `&timezone=auto`;
+
+      const airURL =
+        `https://air-quality-api.open-meteo.com/v1/air-quality` +
+        `?latitude=${latitude}` +
+        `&longitude=${longitude}` +
+        `&current=pm2_5,pm10,european_aqi` +
+        `&timezone=auto`;
+
+      const [weatherResponse, airResponse] =
+        await Promise.all([
+          fetch(weatherURL),
+          fetch(airURL)
+        ]);
+
+      if (!weatherResponse.ok)
+        throw new Error("Weather API error");
+
+      if (!airResponse.ok)
+        throw new Error("Air Quality API error");
+
+      const weather =
+        await weatherResponse.json();
+
+      const air =
+        await airResponse.json();
+
+
+      /*
+       * =====================================
+       * TODAY
+       * =====================================
+       */
+
+      const current =
+        weather.current;
+
+      const daily =
+        weather.daily;
+
+
+      const today =
+        new Date();
+
+      document.getElementById("todayDay")
+        .textContent =
+        today.toLocaleDateString(
+          "en-US",
+          {
+            weekday: "long"
+          }
+        );
+
+      document.getElementById("todayDate")
+        .textContent =
+        today.toLocaleDateString(
+          "en-US",
+          {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          }
+        );
+
+
+      /*
+       * CURRENT WEATHER
+       */
+
+      document.getElementById("currentTemp")
+        .textContent =
+        Math.round(current.temperature_2m);
+
+      document.getElementById("feelsLike")
+        .textContent =
+        Math.round(current.apparent_temperature);
+
+      document.getElementById("currentCondition")
+        .textContent =
+        getWeatherDescription(
+          current.weather_code
+        );
+
+      document.getElementById("currentIcon")
+        .textContent =
+        getWeatherIcon(
+          current.weather_code
+        );
+
+
+      /*
+       * WEATHER DETAILS
+       */
+
+      document.getElementById("humidity")
+        .textContent =
+        Math.round(
+          current.relative_humidity_2m
+        );
+
+      document.getElementById("windSpeed")
+        .textContent =
+        Math.round(
+          current.wind_speed_10m
+        );
 
-        /* =================================================
-           WEATHER API
-           ================================================= */
+      document.getElementById("windDirection")
+        .textContent =
+        getWindDirection(
+          current.wind_direction_10m
+        );
 
-        const weatherURL =
-            `https://api.open-meteo.com/v1/forecast` +
+      document.getElementById("cloudCover")
+        .textContent =
+        Math.round(
+          current.cloud_cover
+        );
 
-            `?latitude=${latitude}` +
+      document.getElementById("precipitation")
+        .textContent =
+        current.precipitation;
 
-            `&longitude=${longitude}` +
 
-            `&current=` +
+      /*
+       * TODAY'S RAIN PROBABILITY
+       */
 
-            `temperature_2m,` +
-            `relative_humidity_2m,` +
-            `apparent_temperature,` +
-            `precipitation,` +
-            `rain,` +
-            `weather_code,` +
-            `cloud_cover,` +
-            `wind_speed_10m,` +
-            `wind_direction_10m` +
+      document.getElementById("rainProbability")
+        .textContent =
+        daily.precipitation_probability_max[0];
 
-            `&daily=` +
 
-            `weather_code,` +
-            `temperature_2m_max,` +
-            `temperature_2m_min,` +
-            `precipitation_probability_max,` +
-            `sunrise,` +
-            `sunset` +
+      /*
+       * SUNRISE / SUNSET
+       */
 
-            `&timezone=auto` +
+      document.getElementById("sunrise")
+        .textContent =
+        formatTime(
+          daily.sunrise[0]
+        );
 
-            `&forecast_days=8`;
+      document.getElementById("sunset")
+        .textContent =
+        formatTime(
+          daily.sunset[0]
+        );
 
 
-        /* =================================================
-           AIR QUALITY API
-           ================================================= */
+      /*
+       * =====================================
+       * AIR QUALITY
+       * =====================================
+       */
 
-        const airURL =
-            `https://air-quality-api.open-meteo.com/v1/air-quality` +
+      const aqi =
+        air.current.european_aqi;
 
-            `?latitude=${latitude}` +
+      const pm25 =
+        air.current.pm2_5;
 
-            `&longitude=${longitude}` +
+      const pm10 =
+        air.current.pm10;
 
-            `&current=` +
 
-            `us_aqi,pm2_5` +
+      document.getElementById("aqi")
+        .textContent =
+        Math.round(aqi);
 
-            `&timezone=auto`;
+      document.getElementById("aqiStatus")
+        .textContent =
+        getAQIStatus(aqi);
 
+      document.getElementById("pm25")
+        .textContent =
+        pm25.toFixed(1);
 
-        const [weatherResponse, airResponse] =
-            await Promise.all([
+      document.getElementById("pm10")
+        .textContent =
+        pm10.toFixed(1);
 
-                fetch(weatherURL),
 
-                fetch(airURL)
+      /*
+       * =====================================
+       * NEXT 7 DAYS
+       * =====================================
+       *
+       * Index 0 = TODAY
+       *
+       * Index 1 = TOMORROW
+       *
+       * Index 2 = DAY AFTER TOMORROW
+       *
+       * Therefore we start from 1.
+       */
 
-            ]);
+      const forecastContainer =
+        document.getElementById("forecast");
 
+      forecastContainer.innerHTML = "";
 
-        if (!weatherResponse.ok)
-            throw new Error("Weather API error");
 
+      for (let i = 1; i <= 7; i++) {
 
-        if (!airResponse.ok)
-            throw new Error("Air quality API error");
+        const date =
+          daily.time[i];
 
+        const code =
+          daily.weather_code[i];
 
-        const weather =
-            await weatherResponse.json();
+        const maxTemp =
+          daily.temperature_2m_max[i];
 
+        const minTemp =
+          daily.temperature_2m_min[i];
 
-        const air =
-            await airResponse.json();
+        const rainChance =
+          daily.precipitation_probability_max[i];
 
+        const rainAmount =
+          daily.precipitation_sum[i];
 
-        /* =================================================
-           CURRENT DATA
-           ================================================= */
 
-        const current =
-            weather.current;
+        const card =
+          document.createElement("div");
 
+        card.className =
+          "glass forecast-card";
 
-        const currentCode =
-            current.weather_code;
 
+        card.innerHTML = `
 
-        document.getElementById("mainIcon")
-            .textContent =
-            getWeatherEmoji(currentCode);
+          <div class="forecast-day">
+            ${getDayName(date)}
+          </div>
 
+          <div class="forecast-date">
+            ${getShortDate(date)}
+          </div>
 
-        document.getElementById("mainTemp")
-            .textContent =
-            Math.round(current.temperature_2m) + "°C";
+          <div class="forecast-icon">
+            ${getWeatherIcon(code)}
+          </div>
 
+          <div class="forecast-condition">
+            ${getWeatherDescription(code)}
+          </div>
 
-        document.getElementById("mainCondition")
-            .textContent =
-            getWeatherDescription(currentCode);
+          <div class="max-temp">
+            ${Math.round(maxTemp)}°C
+          </div>
 
+          <div class="min-temp">
+            ${Math.round(minTemp)}°C
+          </div>
 
-        document.getElementById("humidity")
-            .textContent =
-            current.relative_humidity_2m + "%";
+          <div class="rain-chance">
+            ☔ ${rainChance}%
+          </div>
 
+          <div class="rain-amount">
+            💧 ${rainAmount} mm
+          </div>
 
-        document.getElementById("wind")
-            .textContent =
-            Math.round(current.wind_speed_10m) +
-            " km/h";
+        `;
 
 
-        document.getElementById("windDirection")
-            .textContent =
-            getWindDirection(
-                current.wind_direction_10m
-            );
+        forecastContainer.appendChild(card);
+      }
 
 
-        document.getElementById("cloud")
-            .textContent =
-            current.cloud_cover + "%";
+    } catch (error) {
 
+      console.error(error);
 
-        document.getElementById("feelsLike")
-            .textContent =
-            Math.round(
-                current.apparent_temperature
-            ) + "°C";
-
-
-        /* =================================================
-           TODAY'S DAILY DATA
-           ================================================= */
-
-        document.getElementById("todayDate")
-            .textContent =
-            new Date()
-                .toLocaleDateString(
-                    "en-US",
-                    {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric"
-                    }
-                );
-
-
-        document.getElementById("location")
-            .textContent =
-            "📍 Weather at selected location";
-
-
-        document.getElementById("rainProbability")
-            .textContent =
-            weather.daily
-                .precipitation_probability_max[0]
-                + "%";
-
-
-        document.getElementById("sunrise")
-            .textContent =
-            formatTime(
-                weather.daily.sunrise[0]
-            );
-
-
-        document.getElementById("sunset")
-            .textContent =
-            formatTime(
-                weather.daily.sunset[0]
-            );
-
-
-        /* =================================================
-           AIR QUALITY
-           ================================================= */
-
-        const aqi =
-            air.current.us_aqi;
-
-        const pm25 =
-            air.current.pm2_5;
-
-
-        document.getElementById("aqi")
-            .textContent =
-            Math.round(aqi);
-
-
-        document.getElementById("aqiStatus")
-            .textContent =
-            getAQIStatus(aqi);
-
-
-        document.getElementById("pm25")
-            .textContent =
-            Math.round(pm25);
-
-
-        /* =================================================
-           7 DAY FORECAST
-           
-           INDEX 0 = TODAY
-           INDEX 1 = TOMORROW
-
-           Therefore:
-           START AT INDEX 1
-           ================================================= */
-
-        const forecast =
-            document.getElementById("forecast");
-
-        forecast.innerHTML = "";
-
-
-        for (let i = 1; i <= 7; i++) {
-
-            const date =
-                weather.daily.time[i];
-
-
-            const code =
-                weather.daily.weather_code[i];
-
-
-            const maxTemp =
-                Math.round(
-                    weather.daily
-                        .temperature_2m_max[i]
-                );
-
-
-            const minTemp =
-                Math.round(
-                    weather.daily
-                        .temperature_2m_min[i]
-                );
-
-
-            const rain =
-                weather.daily
-                    .precipitation_probability_max[i];
-
-
-            const day =
-                getDayName(date);
-
-
-            const formattedDate =
-                formatDate(date);
-
-
-            const icon =
-                getWeatherEmoji(code);
-
-
-            const description =
-                getWeatherDescription(code);
-
-
-            /* =============================================
-               CREATE CARD
-               ============================================= */
-
-            const card =
-                document.createElement("div");
-
-            card.className = "card";
-
-
-            card.innerHTML = `
-
-                <div class="card-day">
-                    ${day}
-                </div>
-
-                <div class="card-date">
-                    ${formattedDate}
-                </div>
-
-                <div class="card-icon">
-                    ${icon}
-                </div>
-
-                <div class="card-condition">
-                    ${description}
-                </div>
-
-                <div class="card-temp">
-                    ${maxTemp}° / ${minTemp}°
-                </div>
-
-                <div class="card-rain">
-                    🌧️ ${rain}% rain
-                </div>
-
-            `;
-
-
-            forecast.appendChild(card);
-
-        }
-
-
-        /* =================================================
-           SHOW PAGE
-           ================================================= */
-
-        loading.style.display = "none";
-
-        today.style.display = "block";
-
-        forecastSection.style.display = "block";
-
+      document.getElementById("error")
+        .innerHTML = `
+          <div class="error">
+            ⚠️ Unable to load weather data.
+            <br>
+            Please check your internet connection
+            or location coordinates.
+          </div>
+        `;
 
     }
 
-    catch (err) {
-
-        console.error(err);
-
-        loading.style.display = "none";
-
-        error.innerHTML =
-            "❌ Unable to load weather data. Please try again.";
-
-    }
-
-}
+  }
 
 
-/* =====================================================
-   START WEATHER
-   ===================================================== */
+  /*
+   * =========================================
+   * START
+   * =========================================
+   */
 
-loadWeather();
+  loadWeather();
+
+
+  /*
+   * =========================================
+   * AUTO REFRESH
+   * =========================================
+   *
+   * Refresh weather every 10 minutes.
+   */
+
+  setInterval(
+    loadWeather,
+    10 * 60 * 1000
+  );
 
 </script>
 
 </body>
 </html>
+       
