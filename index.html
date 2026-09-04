@@ -1,365 +1,1142 @@
- <!DOCTYPE html>
+ 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Day Weather Forecast</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<title>AK Weather</title>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #eef6ff;
-            color: #222;
-            padding: 20px;
-        }
+<style>
 
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .forecast {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            max-width: 1100px;
-            margin: auto;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dff3ff, #f7fbff);
+    color: #222;
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        .card {
-            background: white;
-            border-radius: 18px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+/* HEADER */
 
-        .day {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .date {
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 15px;
-        }
+header h1 {
+    font-size: 34px;
+}
 
-        .weather-icon {
-            font-size: 45px;
-            margin: 10px 0;
-        }
+header p {
+    color: #666;
+    margin-top: 5px;
+}
 
-        .condition {
-            font-size: 15px;
-            margin-bottom: 12px;
-        }
 
-        .temperature {
-            font-size: 18px;
-            font-weight: bold;
-        }
+/* MAIN */
 
-        .loading {
-            text-align: center;
-            font-size: 18px;
-            margin: 30px;
-        }
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
 
-        .error {
-            text-align: center;
-            color: red;
-            margin: 30px;
-        }
-    </style>
+
+/* TODAY */
+
+.today {
+    background: rgba(255,255,255,0.9);
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+.today-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.location {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.today-date {
+    color: #777;
+    margin-top: 5px;
+}
+
+.main-weather {
+    text-align: center;
+}
+
+.main-icon {
+    font-size: 80px;
+}
+
+.main-temp {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.condition {
+    font-size: 20px;
+    color: #555;
+}
+
+
+/* DETAILS */
+
+.details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.detail {
+    background: #f5f9fc;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+}
+
+.detail-icon {
+    font-size: 25px;
+}
+
+.detail-title {
+    color: #777;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.detail-value {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+
+/* AIR QUALITY */
+
+.aqi {
+    margin-top: 15px;
+    background: #f5f9fc;
+    border-radius: 15px;
+    padding: 18px;
+    text-align: center;
+}
+
+.aqi-value {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.aqi-status {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+
+/* FORECAST */
+
+.forecast-title {
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.forecast {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 18px 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card-day {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-date {
+    color: #777;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.card-icon {
+    font-size: 45px;
+    margin: 15px 0;
+}
+
+.card-condition {
+    font-size: 13px;
+    min-height: 32px;
+}
+
+.card-temp {
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.card-rain {
+    font-size: 12px;
+    color: #2674c5;
+    margin-top: 7px;
+}
+
+
+/* BUTTON */
+
+.refresh {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #1677ff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.refresh:hover {
+    opacity: 0.85;
+}
+
+
+/* LOADING */
+
+.loading {
+    text-align: center;
+    font-size: 18px;
+    padding: 30px;
+}
+
+
+/* ERROR */
+
+.error {
+    text-align: center;
+    color: red;
+    padding: 20px;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    margin-top: 35px;
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .forecast {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .today-top {
+        flex-direction: column;
+    }
+
+}
+
+</style>
 </head>
+
 
 <body>
 
-    <h1>7-Day Weather Forecast</h1>
+<header>
+
+    <h1>🌦️ AK Weather</h1>
+
+    <p>Live weather & 7-day forecast</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- LOADING -->
 
     <div id="loading" class="loading">
-        Loading forecast...
+        Loading weather...
     </div>
 
-    <div id="forecast" class="forecast"></div>
+
+    <!-- ERROR -->
 
     <div id="error" class="error"></div>
 
 
-    <script>
+    <!-- TODAY -->
 
-        // --------------------------------
-        // LOCATION
-        // --------------------------------
+    <section class="today" id="today" style="display:none;">
 
-        // Replace these with your location coordinates
-        const latitude = 22.5958;
-        const longitude = 88.2636;
+        <div class="today-top">
+
+            <div>
+
+                <div class="location" id="location">
+                    Your Location
+                </div>
+
+                <div class="today-date" id="todayDate">
+                </div>
+
+            </div>
 
 
-        // --------------------------------
-        // WEATHER CODE → ICON
-        // --------------------------------
+            <div class="main-weather">
 
-        function getWeatherEmoji(code) {
+                <div class="main-icon" id="mainIcon">
+                    🌤️
+                </div>
 
-            if (code === 0)
-                return "☀️";
+                <div class="main-temp" id="mainTemp">
+                    --°C
+                </div>
 
-            if (code === 1)
-                return "🌤️";
+                <div class="condition" id="mainCondition">
+                    Loading...
+                </div>
 
-            if (code === 2)
-                return "⛅";
+            </div>
 
-            if (code === 3)
-                return "☁️";
+        </div>
 
-            if (code === 45 || code === 48)
-                return "🌫️";
 
-            if (code >= 51 && code <= 55)
-                return "🌦️";
+        <!-- WEATHER DETAILS -->
 
-            if (code >= 56 && code <= 57)
-                return "🌧️";
+        <div class="details">
 
-            if (code >= 61 && code <= 65)
-                return "🌧️";
 
-            if (code >= 66 && code <= 67)
-                return "🌧️";
+            <div class="detail">
 
-            if (code >= 71 && code <= 77)
-                return "❄️";
+                <div class="detail-icon">
+                    💧
+                </div>
 
-            if (code >= 80 && code <= 82)
-                return "🌦️";
+                <div class="detail-title">
+                    Humidity
+                </div>
 
-            if (code >= 85 && code <= 86)
-                return "🌨️";
+                <div class="detail-value" id="humidity">
+                    --
+                </div>
 
-            if (code >= 95)
-                return "⛈️";
+            </div>
 
-            return "🌤️";
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    💨
+                </div>
+
+                <div class="detail-title">
+                    Wind
+                </div>
+
+                <div class="detail-value" id="wind">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    🧭
+                </div>
+
+                <div class="detail-title">
+                    Wind Direction
+                </div>
+
+                <div class="detail-value" id="windDirection">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    ☁️
+                </div>
+
+                <div class="detail-title">
+                    Cloud Cover
+                </div>
+
+                <div class="detail-value" id="cloud">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    🌧️
+                </div>
+
+                <div class="detail-title">
+                    Rain Probability
+                </div>
+
+                <div class="detail-value" id="rainProbability">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    🌅
+                </div>
+
+                <div class="detail-title">
+                    Sunrise
+                </div>
+
+                <div class="detail-value" id="sunrise">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    🌇
+                </div>
+
+                <div class="detail-title">
+                    Sunset
+                </div>
+
+                <div class="detail-value" id="sunset">
+                    --
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-icon">
+                    🌡️
+                </div>
+
+                <div class="detail-title">
+                    Feels Like
+                </div>
+
+                <div class="detail-value" id="feelsLike">
+                    --
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AQI -->
+
+        <div class="aqi">
+
+            <div>
+                🌫️ Air Quality
+            </div>
+
+            <div class="aqi-value" id="aqi">
+                --
+            </div>
+
+            <div class="aqi-status" id="aqiStatus">
+                Loading...
+            </div>
+
+            <div style="margin-top:8px;">
+                PM2.5:
+                <strong id="pm25">--</strong>
+                μg/m³
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- FORECAST -->
+
+    <section id="forecastSection" style="display:none;">
+
+        <div class="forecast-title">
+            📅 7-Day Forecast
+        </div>
+
+        <div id="forecast" class="forecast">
+        </div>
+
+    </section>
+
+
+    <!-- REFRESH -->
+
+    <button class="refresh" onclick="loadWeather()">
+        🔄 Refresh Weather
+    </button>
+
+
+</div>
+
+
+<footer>
+
+    Weather data provided by Open-Meteo
+
+</footer>
+
+
+
+<script>
+
+
+/* =====================================================
+   LOCATION
+   ===================================================== */
+
+/*
+   CHANGE THESE COORDINATES
+   TO YOUR LOCATION.
+
+   Example:
+   Latitude  = 22.5958
+   Longitude = 88.2636
+*/
+
+const latitude = 22.5958;
+const longitude = 88.2636;
+
+
+/* =====================================================
+   WEATHER EMOJI
+   ===================================================== */
+
+function getWeatherEmoji(code) {
+
+    if (code === 0)
+        return "☀️";
+
+    if (code === 1)
+        return "🌤️";
+
+    if (code === 2)
+        return "⛅";
+
+    if (code === 3)
+        return "☁️";
+
+    if (code === 45 || code === 48)
+        return "🌫️";
+
+    if (code >= 51 && code <= 55)
+        return "🌦️";
+
+    if (code >= 56 && code <= 57)
+        return "🌧️";
+
+    if (code >= 61 && code <= 65)
+        return "🌧️";
+
+    if (code >= 66 && code <= 67)
+        return "🌧️";
+
+    if (code >= 71 && code <= 77)
+        return "❄️";
+
+    if (code >= 80 && code <= 82)
+        return "🌦️";
+
+    if (code >= 85 && code <= 86)
+        return "🌨️";
+
+    if (code >= 95)
+        return "⛈️";
+
+    return "🌤️";
+}
+
+
+/* =====================================================
+   WEATHER DESCRIPTION
+   ===================================================== */
+
+function getWeatherDescription(code) {
+
+    if (code === 0)
+        return "Clear sky";
+
+    if (code === 1)
+        return "Mainly clear";
+
+    if (code === 2)
+        return "Partly cloudy";
+
+    if (code === 3)
+        return "Overcast";
+
+    if (code === 45 || code === 48)
+        return "Fog";
+
+    if (code >= 51 && code <= 55)
+        return "Drizzle";
+
+    if (code >= 56 && code <= 57)
+        return "Freezing drizzle";
+
+    if (code >= 61 && code <= 65)
+        return "Rain";
+
+    if (code >= 66 && code <= 67)
+        return "Freezing rain";
+
+    if (code >= 71 && code <= 77)
+        return "Snow";
+
+    if (code >= 80 && code <= 82)
+        return "Rain showers";
+
+    if (code >= 85 && code <= 86)
+        return "Snow showers";
+
+    if (code >= 95)
+        return "Thunderstorm";
+
+    return "Unknown";
+}
+
+
+/* =====================================================
+   WIND DIRECTION
+   ===================================================== */
+
+function getWindDirection(degrees) {
+
+    const directions = [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+    ];
+
+    const index =
+        Math.round(degrees / 45) % 8;
+
+    return directions[index];
+}
+
+
+/* =====================================================
+   AQI STATUS
+   ===================================================== */
+
+function getAQIStatus(aqi) {
+
+    if (aqi <= 50)
+        return "Good 🟢";
+
+    if (aqi <= 100)
+        return "Moderate 🟡";
+
+    if (aqi <= 150)
+        return "Unhealthy for sensitive groups 🟠";
+
+    if (aqi <= 200)
+        return "Unhealthy 🔴";
+
+    if (aqi <= 300)
+        return "Very unhealthy 🟣";
+
+    return "Hazardous ⚫";
+}
+
+
+/* =====================================================
+   FORMAT TIME
+   ===================================================== */
+
+function formatTime(time) {
+
+    const date = new Date(time);
+
+    return date.toLocaleTimeString(
+        "en-US",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+/* =====================================================
+   DAY NAME
+   ===================================================== */
+
+function getDayName(dateString) {
+
+    const date =
+        new Date(dateString + "T12:00:00");
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            weekday: "long"
+        }
+    );
+}
+
+
+/* =====================================================
+   DATE FORMAT
+   ===================================================== */
+
+function formatDate(dateString) {
+
+    const date =
+        new Date(dateString + "T12:00:00");
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            day: "numeric",
+            month: "short"
+        }
+    );
+}
+
+
+/* =====================================================
+   LOAD WEATHER
+   ===================================================== */
+
+async function loadWeather() {
+
+    const loading =
+        document.getElementById("loading");
+
+    const error =
+        document.getElementById("error");
+
+    const today =
+        document.getElementById("today");
+
+    const forecastSection =
+        document.getElementById("forecastSection");
+
+    loading.style.display = "block";
+
+    error.innerHTML = "";
+
+    today.style.display = "none";
+
+    forecastSection.style.display = "none";
+
+
+    try {
+
+
+        /* =================================================
+           WEATHER API
+           ================================================= */
+
+        const weatherURL =
+            `https://api.open-meteo.com/v1/forecast` +
+
+            `?latitude=${latitude}` +
+
+            `&longitude=${longitude}` +
+
+            `&current=` +
+
+            `temperature_2m,` +
+            `relative_humidity_2m,` +
+            `apparent_temperature,` +
+            `precipitation,` +
+            `rain,` +
+            `weather_code,` +
+            `cloud_cover,` +
+            `wind_speed_10m,` +
+            `wind_direction_10m` +
+
+            `&daily=` +
+
+            `weather_code,` +
+            `temperature_2m_max,` +
+            `temperature_2m_min,` +
+            `precipitation_probability_max,` +
+            `sunrise,` +
+            `sunset` +
+
+            `&timezone=auto` +
+
+            `&forecast_days=8`;
+
+
+        /* =================================================
+           AIR QUALITY API
+           ================================================= */
+
+        const airURL =
+            `https://air-quality-api.open-meteo.com/v1/air-quality` +
+
+            `?latitude=${latitude}` +
+
+            `&longitude=${longitude}` +
+
+            `&current=` +
+
+            `us_aqi,pm2_5` +
+
+            `&timezone=auto`;
+
+
+        const [weatherResponse, airResponse] =
+            await Promise.all([
+
+                fetch(weatherURL),
+
+                fetch(airURL)
+
+            ]);
+
+
+        if (!weatherResponse.ok)
+            throw new Error("Weather API error");
+
+
+        if (!airResponse.ok)
+            throw new Error("Air quality API error");
+
+
+        const weather =
+            await weatherResponse.json();
+
+
+        const air =
+            await airResponse.json();
+
+
+        /* =================================================
+           CURRENT DATA
+           ================================================= */
+
+        const current =
+            weather.current;
+
+
+        const currentCode =
+            current.weather_code;
+
+
+        document.getElementById("mainIcon")
+            .textContent =
+            getWeatherEmoji(currentCode);
+
+
+        document.getElementById("mainTemp")
+            .textContent =
+            Math.round(current.temperature_2m) + "°C";
+
+
+        document.getElementById("mainCondition")
+            .textContent =
+            getWeatherDescription(currentCode);
+
+
+        document.getElementById("humidity")
+            .textContent =
+            current.relative_humidity_2m + "%";
+
+
+        document.getElementById("wind")
+            .textContent =
+            Math.round(current.wind_speed_10m) +
+            " km/h";
+
+
+        document.getElementById("windDirection")
+            .textContent =
+            getWindDirection(
+                current.wind_direction_10m
+            );
+
+
+        document.getElementById("cloud")
+            .textContent =
+            current.cloud_cover + "%";
+
+
+        document.getElementById("feelsLike")
+            .textContent =
+            Math.round(
+                current.apparent_temperature
+            ) + "°C";
+
+
+        /* =================================================
+           TODAY'S DAILY DATA
+           ================================================= */
+
+        document.getElementById("todayDate")
+            .textContent =
+            new Date()
+                .toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+        document.getElementById("location")
+            .textContent =
+            "📍 Weather at selected location";
+
+
+        document.getElementById("rainProbability")
+            .textContent =
+            weather.daily
+                .precipitation_probability_max[0]
+                + "%";
+
+
+        document.getElementById("sunrise")
+            .textContent =
+            formatTime(
+                weather.daily.sunrise[0]
+            );
+
+
+        document.getElementById("sunset")
+            .textContent =
+            formatTime(
+                weather.daily.sunset[0]
+            );
+
+
+        /* =================================================
+           AIR QUALITY
+           ================================================= */
+
+        const aqi =
+            air.current.us_aqi;
+
+        const pm25 =
+            air.current.pm2_5;
+
+
+        document.getElementById("aqi")
+            .textContent =
+            Math.round(aqi);
+
+
+        document.getElementById("aqiStatus")
+            .textContent =
+            getAQIStatus(aqi);
+
+
+        document.getElementById("pm25")
+            .textContent =
+            Math.round(pm25);
+
+
+        /* =================================================
+           7 DAY FORECAST
+           
+           INDEX 0 = TODAY
+           INDEX 1 = TOMORROW
+
+           Therefore:
+           START AT INDEX 1
+           ================================================= */
+
+        const forecast =
+            document.getElementById("forecast");
+
+        forecast.innerHTML = "";
+
+
+        for (let i = 1; i <= 7; i++) {
+
+            const date =
+                weather.daily.time[i];
+
+
+            const code =
+                weather.daily.weather_code[i];
+
+
+            const maxTemp =
+                Math.round(
+                    weather.daily
+                        .temperature_2m_max[i]
+                );
+
+
+            const minTemp =
+                Math.round(
+                    weather.daily
+                        .temperature_2m_min[i]
+                );
+
+
+            const rain =
+                weather.daily
+                    .precipitation_probability_max[i];
+
+
+            const day =
+                getDayName(date);
+
+
+            const formattedDate =
+                formatDate(date);
+
+
+            const icon =
+                getWeatherEmoji(code);
+
+
+            const description =
+                getWeatherDescription(code);
+
+
+            /* =============================================
+               CREATE CARD
+               ============================================= */
+
+            const card =
+                document.createElement("div");
+
+            card.className = "card";
+
+
+            card.innerHTML = `
+
+                <div class="card-day">
+                    ${day}
+                </div>
+
+                <div class="card-date">
+                    ${formattedDate}
+                </div>
+
+                <div class="card-icon">
+                    ${icon}
+                </div>
+
+                <div class="card-condition">
+                    ${description}
+                </div>
+
+                <div class="card-temp">
+                    ${maxTemp}° / ${minTemp}°
+                </div>
+
+                <div class="card-rain">
+                    🌧️ ${rain}% rain
+                </div>
+
+            `;
+
+
+            forecast.appendChild(card);
+
         }
 
 
-        // --------------------------------
-        // WEATHER CODE → DESCRIPTION
-        // --------------------------------
+        /* =================================================
+           SHOW PAGE
+           ================================================= */
 
-        function getWeatherDescription(code) {
+        loading.style.display = "none";
 
-            if (code === 0)
-                return "Clear sky";
+        today.style.display = "block";
 
-            if (code === 1)
-                return "Mainly clear";
+        forecastSection.style.display = "block";
 
-            if (code === 2)
-                return "Partly cloudy";
 
-            if (code === 3)
-                return "Overcast";
+    }
 
-            if (code === 45 || code === 48)
-                return "Fog";
+    catch (err) {
 
-            if (code >= 51 && code <= 55)
-                return "Drizzle";
+        console.error(err);
 
-            if (code >= 56 && code <= 57)
-                return "Freezing drizzle";
+        loading.style.display = "none";
 
-            if (code >= 61 && code <= 65)
-                return "Rain";
+        error.innerHTML =
+            "❌ Unable to load weather data. Please try again.";
 
-            if (code >= 66 && code <= 67)
-                return "Freezing rain";
+    }
 
-            if (code >= 71 && code <= 77)
-                return "Snow";
+}
 
-            if (code >= 80 && code <= 82)
-                return "Rain showers";
 
-            if (code >= 85 && code <= 86)
-                return "Snow showers";
+/* =====================================================
+   START WEATHER
+   ===================================================== */
 
-            if (code >= 95)
-                return "Thunderstorm";
+loadWeather();
 
-            return "Unknown";
-        }
-
-
-        // --------------------------------
-        // GET DAY NAME
-        // --------------------------------
-
-        function getDayName(dateString) {
-
-            const date = new Date(dateString + "T12:00:00");
-
-            return date.toLocaleDateString("en-US", {
-                weekday: "long"
-            });
-        }
-
-
-        // --------------------------------
-        // FORMAT DATE
-        // --------------------------------
-
-        function formatDate(dateString) {
-
-            const date = new Date(dateString + "T12:00:00");
-
-            return date.toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "short"
-            });
-        }
-
-
-        // --------------------------------
-        // LOAD WEATHER
-        // --------------------------------
-
-        async function loadWeather() {
-
-            const loading = document.getElementById("loading");
-            const forecastContainer =
-                document.getElementById("forecast");
-            const error =
-                document.getElementById("error");
-
-            try {
-
-                const url =
-                    `https://api.open-meteo.com/v1/forecast` +
-                    `?latitude=${latitude}` +
-                    `&longitude=${longitude}` +
-                    `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-                    `&timezone=auto`;
-
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error("Weather API error");
-                }
-
-                const data = await response.json();
-
-                loading.style.display = "none";
-
-                const dates = data.daily.time;
-                const weatherCodes = data.daily.weather_code;
-                const maxTemps = data.daily.temperature_2m_max;
-                const minTemps = data.daily.temperature_2m_min;
-
-
-                // --------------------------------
-                // IMPORTANT:
-                // START FROM TOMORROW
-                // --------------------------------
-
-                forecastContainer.innerHTML = "";
-
-
-                // index 0 = TODAY
-                // index 1 = TOMORROW
-                //
-                // Therefore we start at 1
-                // and show the next 7 days.
-
-                for (let i = 1; i <= 7; i++) {
-
-                    const date = dates[i];
-                    const code = weatherCodes[i];
-
-                    const dayName = getDayName(date);
-                    const formattedDate = formatDate(date);
-
-                    const icon = getWeatherEmoji(code);
-
-                    const description =
-                        getWeatherDescription(code);
-
-                    const maxTemp =
-                        Math.round(maxTemps[i]);
-
-                    const minTemp =
-                        Math.round(minTemps[i]);
-
-
-                    // --------------------------------
-                    // CREATE CARD
-                    // --------------------------------
-
-                    const card =
-                        document.createElement("div");
-
-                    card.className = "card";
-
-                    card.innerHTML = `
-
-                        <div class="day">
-                            ${dayName}
-                        </div>
-
-                        <div class="date">
-                            ${formattedDate}
-                        </div>
-
-                        <div class="weather-icon">
-                            ${icon}
-                        </div>
-
-                        <div class="condition">
-                            ${description}
-                        </div>
-
-                        <div class="temperature">
-                            ${maxTemp}°C / ${minTemp}°C
-                        </div>
-
-                    `;
-
-                    forecastContainer.appendChild(card);
-                }
-
-            }
-
-            catch (err) {
-
-                loading.style.display = "none";
-
-                error.innerHTML =
-                    "Unable to load weather data.";
-
-                console.error(err);
-            }
-        }
-
-
-        // --------------------------------
-        // START
-        // --------------------------------
-
-        loadWeather();
-
-    </script>
+</script>
 
 </body>
 </html>
